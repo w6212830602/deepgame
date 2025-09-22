@@ -1,0 +1,113 @@
+:root {
+  --bg: #0f172a;         /* background */
+  --panel: #111827;      /* card background */
+  --text: #e5e7eb;       /* text color */
+  --muted: #9ca3af;      /* secondary text */
+  --primary: #3b82f6;    /* primary color */
+  --primary-2: #2563eb;  /* primary hover */
+  --border: #1f2937;     /* border color */
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(
+    1200px 600px at 50% -10%, 
+    #1f2937 0%, 
+    var(--bg) 50%
+  );
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    "Noto Sans", "Helvetica Neue", Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+}
+
+.container {
+  min-height: 100%;
+  padding: 48px 16px 72px;
+  display: grid;
+  place-items: center;
+}
+
+.card {
+  width: min(720px, 92vw);
+  background: linear-gradient(
+    180deg, 
+    rgba(255,255,255,0.03), 
+    rgba(255,255,255,0.01)
+  );
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 20px 28px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  backdrop-filter: blur(6px);
+}
+
+h1, h2 {
+  margin: 8px 0 12px;
+  letter-spacing: 0.3px;
+}
+
+p { color: var(--muted); }
+
+.text {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 8px 0 16px;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #0b1220;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform .04s ease, background .2s ease, border-color .2s ease;
+}
+
+.btn:hover { 
+  transform: translateY(-1px); 
+  border-color: #2b3648; 
+}
+.btn:active { transform: translateY(0); }
+
+.btn.primary {
+  background: linear-gradient(
+    180deg, 
+    var(--primary), 
+    var(--primary-2)
+  );
+  border-color: rgba(255,255,255,0.15);
+}
+
+.btn.ghost {
+  background: transparent;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 18px;
+  color: var(--muted);
+}

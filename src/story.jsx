@@ -12,7 +12,7 @@ export default function Story({ scenarioKey, baseContext, onBack }) {
       const text = await askAI({ context: baseContext, playerChoice: "" });
       setLog([{ text }]);
     } catch (e) {
-      setErr("Failed to contact AI. Please try again.");
+      setErr(e.message || "AI error. Try again.");
       console.error(e);
     } finally {
       setLoading(false);

@@ -1,4 +1,3 @@
-// src/scenarios.js 
 export const SCENARIOS = {
   lab: {
     title: "Lab Startup Day",
@@ -22,7 +21,7 @@ Constraints: power rationing, debris alerts, tight docking window.
 Tone: crisp, tense, hard-sci-fi.`
   },
 
-  // --- New Scenarios Added Below ---
+  // New Scenarios Added Below 
   time_recycler: {
     title: "Time Recycler",
     context: `You stumble upon a mysterious shop tucked in an alley: “The Time Recycler.”

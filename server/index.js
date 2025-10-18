@@ -1,10 +1,8 @@
-// server/index.js
 import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-// Node 18+ 內建 fetch，不需安裝其他套件
 
 const app = express();
 app.use(cors());
@@ -12,14 +10,13 @@ app.use(express.json());
 
 const PROVIDER = process.env.PROVIDER || 'ollama';
 
-// 敘事指令
 const SYSTEM_PROMPT = `
 You are the Narrator of a short interactive story.
 Write vivid but concise scenes (120-180 words), then end with 2-3 numbered choices (1) 2) 3)).
 Keep strict continuity from 'context'. Return plain text only.
 `;
 
-// 健康檢查
+// Safe health check endpoint
 app.get('/api/health', async (_req, res) => {
   const info = { ok: true, provider: PROVIDER };
   if (PROVIDER === 'ollama') {
@@ -38,7 +35,7 @@ app.get('/api/health', async (_req, res) => {
   res.json(info);
 });
 
-// === 核心：產生下一段劇情 ===
+// Story generation endpoint
 app.post('/api/story', async (req, res) => {
   const { context = '', playerChoice = '' } = req.body || {};
 
@@ -51,7 +48,7 @@ app.post('/api/story', async (req, res) => {
       const base = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
       const model = process.env.OLLAMA_MODEL || 'llama3.1';
 
-      // 用 /api/chat，一次性回覆（非串流）
+      // Call Ollama API
       const r = await fetch(`${base}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,7 +60,7 @@ app.post('/api/story', async (req, res) => {
           ],
           options: {
             temperature: 0.8,
-            num_predict: 220,   // 類似 max_tokens
+            num_predict: 220,   // Adjust as needed for length
           },
           stream: false
         })
@@ -78,7 +75,6 @@ app.post('/api/story', async (req, res) => {
       if (!text) throw new Error('Empty response from Ollama');
 
     } else {
-      // 若日後要切回雲端 OpenAI，可放回先前的 openai SDK 呼叫
       throw new Error('PROVIDER=openai not configured in this file');
     }
 

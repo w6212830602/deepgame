@@ -1,7 +1,7 @@
-/* ---------- Fonts ---------- */
+/* Fonts  */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 
-/* ---------- Reset ---------- */
+/* Reset */
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
 body {
@@ -13,20 +13,20 @@ body {
               linear-gradient(180deg, #0b132b 0%, #0b1224 60%, #0a0f1c 100%);
 }
 
-/* ---------- Theme ---------- */
+/* Theme*/
 :root{
   --text: #E6ECF3;
   --muted: #9FB0C5;
   --card: rgba(255,255,255,0.06);
   --card-border: rgba(255,255,255,0.14);
-  --accent: #7C5CFF;        /* 主色：紫藍 */
-  --accent-2: #30E0A1;      /* 輔色：綠松 */
+  --accent: #7C5CFF;        
+  --accent-2: #30E0A1;      
   --danger: #ff5a8a;
   --shadow: 0 10px 30px rgba(0,0,0,0.45);
   --glass: blur(10px) saturate(120%);
 }
 
-/* 小星星動畫（淡淡的即可） */
+/* Starfield background */
 .starfield {
   position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background-image:
@@ -41,14 +41,14 @@ body {
   50% { opacity: .8; }
 }
 
-/* ---------- Layout helpers ---------- */
+/* Layout helpers */
 .container {
   position: relative; z-index: 1;
   max-width: 1100px; margin: 0 auto; padding: 48px 20px 80px;
 }
 .section { margin-top: 28px; }
 
-/* ---------- Card ---------- */
+/* Card */
 .card {
   background: var(--card);
   border: 1px solid var(--card-border);
@@ -64,7 +64,7 @@ body {
   box-shadow: 0 16px 40px rgba(0,0,0,0.55);
 }
 
-/* ---------- Buttons ---------- */
+/* Buttons */
 .button {
   appearance: none; border: 0; cursor: pointer;
   padding: 10px 14px; border-radius: 12px; font-weight: 700;
@@ -83,20 +83,20 @@ body {
   box-shadow: 0 8px 20px rgba(255,90,138,0.35);
 }
 
-/* ---------- Typography ---------- */
+/* Typography */
 .h1 {
   font-size: clamp(28px, 4vw, 44px);
   font-weight: 800; letter-spacing: .4px; margin: 0 0 6px 0;
 }
 .subtle { color: var(--muted); font-weight: 500; }
 
-/* ---------- Grid ---------- */
+/* Grid */
 .grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 18px;
 }
 
-/* ---------- Scenario card ---------- */
+/* Scenario card  */
 .sc-card { display: flex; flex-direction: column; overflow: hidden; }
 .sc-cover {
   height: 120px;
@@ -109,13 +109,13 @@ body {
 .sc-title { font-weight: 700; font-size: 18px; }
 .sc-desc { color: var(--muted); line-height: 1.45; font-size: 14px; }
 
-/* ---------- Panels ---------- */
+/*Panels */
 .panel {
   padding: 18px; border-radius: 16px; border: 1px solid var(--card-border);
   background: var(--card); backdrop-filter: var(--glass);
 }
 
-/* ---------- Story layout ---------- */
+/* Story layout  */
 .story-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .story-title { font-weight: 700; font-size: 22px; }
 .story-actions { margin-left: auto; display: flex; gap: 10px; }
@@ -130,7 +130,7 @@ body {
 }
 .log p { margin: 0 0 10px 0; color: #DDE5EE; }
 
-/* ========== Pretty Buttons & Chips ========== */
+/* Pretty Buttons & Chips  */
 :root{
   --text:#E6ECF3;--muted:#9FB0C5;--card:rgba(255,255,255,.06);
   --card-border:rgba(255,255,255,.14);--accent:#7C5CFF;--accent2:#30E0A1;
@@ -194,3 +194,40 @@ button{font:inherit}
 /* tidy paragraphs inside story log */
 .story-log p{ margin:.6rem 0; line-height:1.7; color:#E6ECF3 }
 .story-log strong{ color:#fff }
+
+
+/* === Chat Input (dock) === */
+.chat-input-wrap{
+  position:relative; display:flex; align-items:flex-end; gap:.6rem;
+  background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.14);
+  border-radius:16px; padding:.55rem .6rem .55rem .6rem;
+  box-shadow:0 12px 28px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter: blur(10px) saturate(120%);
+}
+.chat-chip{
+  flex:0 0 auto;
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:44px; height:32px; padding:0 .6rem;
+  border-radius:10px; font-weight:700; color:#E6ECF3;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+}
+.chat-input{
+  flex:1 1 auto; min-height:42px; max-height:160px;
+  padding:.6rem .8rem; border-radius:12px; border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06); color:#E6ECF3;
+  outline:none; resize:none; overflow:auto; line-height:1.5;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+.chat-input::placeholder{ color:rgba(230,236,243,.55) }
+.chat-input:focus{
+  border-color:rgba(124,92,255,.55);
+  box-shadow: 0 0 0 3px rgba(124,92,255,.25), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.chat-send{
+  flex:0 0 auto;
+}
+
+.chat-input::-webkit-scrollbar{ width:10px }
+.chat-input::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.18); border-radius:12px; border:2px solid transparent; background-clip:padding-box;
+}

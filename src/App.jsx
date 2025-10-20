@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback, memo } from "react";
 import Story from "./story_freeinput.jsx";
 import { SCENARIOS } from "./scenarios.js";
 
@@ -11,6 +11,16 @@ export default function App() {
   const [active, setActive] = useState(null);
   const [previewItem, setPreviewItem] = useState(null);
   const [customOpen, setCustomOpen] = useState(false);
+  const handleCloseCustom = useCallback(() => setCustomOpen(false), []);
+
+
+  const handleCreateCustom = useCallback((form) => {
+  const context = buildContext(form);
+  const custom = { key: "custom", title: form.title || "Custom Scenario", context };
+  setActive(custom);
+  setCustomOpen(false);
+}, []);
+
 
   if (active) {
     return (
@@ -85,14 +95,8 @@ export default function App() {
 
       {customOpen && (
         <CustomScenarioModal
-          onClose={() => setCustomOpen(false)}
-          onCreate={(data) => {
-            // Combine data into context format
-            const context = buildContext(data);
-            const custom = { key: "custom", title: data.title || "Custom Scenario", context };
-            setActive(custom);
-            setCustomOpen(false);
-          }}
+          onClose={handleCloseCustom}
+          onCreate={handleCreateCustom}
         />
       )}
     </div>
@@ -167,17 +171,19 @@ function Badge({ label, value }) {
 }
 
 /* Custom Scenario Modal*/
-function CustomScenarioModal({ onClose, onCreate }) {
+const CustomScenarioModal = memo(function CustomScenarioModal({ onClose, onCreate }) {
   const [data, setData] = useState({
     title: "",
     intro: "",
     goal: "",
-    constraints: "",
     tone: "light, energetic, practical",
+    constraints: "",
   });
 
-  const canSubmit = (data.title?.trim().length || 0) >= 2 &&
-    (data.intro.trim().length > 0 || data.goal.trim().length > 0);
+  const titleRef = useRef(null);
+  useEffect(() => {
+    titleRef.current?.focus({ preventScroll: true });
+  }, []);
 
   useEffect(() => {
     const onEsc = (e) => e.key === "Escape" && onClose();
@@ -185,70 +191,88 @@ function CustomScenarioModal({ onClose, onCreate }) {
     return () => window.removeEventListener("keydown", onEsc);
   }, [onClose]);
 
+  const canSubmit =
+    (data.title?.trim().length || 0) >= 2 &&
+    (data.intro.trim().length > 0 || data.goal.trim().length > 0);
+
+  const Field = ({ label, htmlFor, children }) => (
+    <label htmlFor={htmlFor} className="block">
+      <div className="mb-1 text-sm font-medium text-slate-300">{label}</div>
+      {children}
+    </label>
+  );
+
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/60" onClick={onClose} />
       <div className="fixed inset-0 z-50 grid place-items-center px-4">
-        <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-2xl backdrop-blur">
+        <div className="w-full max-w-md overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-white/10 to-white/5 shadow-2xl backdrop-blur">
           <div className="flex items-start justify-between gap-4 border-b border-white/10 p-4">
-            <h3 className="text-xl font-bold text-slate-100">Create your own scenario</h3>
+            <h3 className="text-xl font-extrabold bg-gradient-to-r from-indigo-300 to-purple-400 bg-clip-text text-transparent">
+              Create your own scenario
+            </h3>
             <button className="btn-ghost btn-sm" onClick={onClose}>✕</button>
           </div>
 
-          <div className="p-5 space-y-4">
-            <Field label="Title">
+          <div className="p-5 space-y-4" onClick={(e)=>e.stopPropagation()}>
+            <Field label="Title" htmlFor="title">
               <input
+                id="title"
                 value={data.title}
-                onChange={(e) => setData({ ...data, title: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-slate-100 outline-none placeholder:text-slate-400"
+                onChange={(e) => setData(prev => ({ ...prev, title: e.target.value }))}
+                className="ui-input"
                 placeholder="e.g., Neon Heist in Old Tokyo"
               />
             </Field>
 
-            <Field label="Intro / Opening">
+            <Field label="Intro / Opening" htmlFor="intro">
               <textarea
+                id="intro"
+                rows={3}
                 value={data.intro}
-                onChange={(e) => setData({ ...data, intro: e.target.value })}
-                rows={4}
-                className="w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-slate-100 outline-none placeholder:text-slate-400"
+                onChange={(e) => setData(prev => ({ ...prev, intro: e.target.value }))}
+                className="ui-textarea"
                 placeholder="One or two sentences to set the scene…"
               />
             </Field>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <Field label="Goal">
+              <Field label="Goal" htmlFor="goal">
                 <input
+                  id="goal"
                   value={data.goal}
-                  onChange={(e) => setData({ ...data, goal: e.target.value })}
-                  className="w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-slate-100 outline-none placeholder:text-slate-400"
-                  placeholder="e.g., Steal the prototype and escape."
+                  onChange={(e) => setData(prev => ({ ...prev, goal: e.target.value }))}
+                  className="ui-input"
+                  placeholder="e.g., Steal the prototype and escape"
                 />
               </Field>
-              <Field label="Tone">
+              <Field label="Tone" htmlFor="tone">
                 <input
+                  id="tone"
                   value={data.tone}
-                  onChange={(e) => setData({ ...data, tone: e.target.value })}
-                  className="w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-slate-100 outline-none placeholder:text-slate-400"
+                  onChange={(e) => setData(prev => ({ ...prev, tone: e.target.value }))}
+                  className="ui-input"
                   placeholder="e.g., grounded, witty noir"
                 />
               </Field>
             </div>
 
-            <Field label="Constraints (optional)">
+            <Field label="Constraints (optional)" htmlFor="constraints">
               <input
+                id="constraints"
                 value={data.constraints}
-                onChange={(e) => setData({ ...data, constraints: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-slate-100 outline-none placeholder:text-slate-400"
+                onChange={(e) => setData(prev => ({ ...prev, constraints: e.target.value }))}
+                className="ui-input"
                 placeholder="e.g., limited time, unreliable ally…"
               />
             </Field>
 
             <div className="flex items-center justify-end gap-2 pt-2">
-              <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+              <button className="btn-ghost" onClick={onClose}>Cancel</button>
               <button
                 className="btn"
                 disabled={!canSubmit}
-                onClick={() => onCreate(data)}
+                onClick={() => onCreate({ ...data })}
               >
                 Start with this scenario
               </button>
@@ -258,7 +282,8 @@ function CustomScenarioModal({ onClose, onCreate }) {
       </div>
     </>
   );
-}
+});
+
 
 function Field({ label, children }) {
   return (

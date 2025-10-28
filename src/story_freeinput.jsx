@@ -16,7 +16,8 @@ const OUTPUT_RULES = `
 SYSTEM / OUTPUT RULES:
 - Continue the story based on the player's freeform input (action, dialogue, thought, or question).
 - DO NOT list numbered choices. End with a natural prompt inviting the next input (e.g., "What do you do next?").
-- Keep paragraphs readable (2–5 sentences per paragraph). Avoid truncation.
+- Keep paragraphs readable (2–3 sentences per paragraph). Avoid truncation.
+- Keep the answer complete in 3 paragraphs or less.
 `;
 
 export default function StoryFreeFixed({ scenarioKey, baseContext, onBack }) {

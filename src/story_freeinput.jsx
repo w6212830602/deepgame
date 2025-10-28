@@ -3,7 +3,6 @@ import { askAI } from "./lib/ai";
 
 const MODES = ["Do", "Say", "Think", "Ask"];
 
-// 輔助：把 **粗體** 轉 <strong>、空行轉段落
 function renderRich(text) {
   const html = text
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
@@ -16,7 +15,8 @@ const OUTPUT_RULES = `
 SYSTEM / OUTPUT RULES:
 - Continue the story based on the player's freeform input (action, dialogue, thought, or question).
 - DO NOT list numbered choices. End with a natural prompt inviting the next input (e.g., "What do you do next?").
-- Keep paragraphs readable (2–5 sentences per paragraph). Avoid truncation.
+- Keep paragraphs readable (2–3 sentences per paragraph). Avoid truncation.
+- Keep the answer complete in 3 paragraphs or less.
 `;
 
 export default function StoryFreeFixed({ scenarioKey, baseContext, onBack }) {
@@ -25,8 +25,7 @@ export default function StoryFreeFixed({ scenarioKey, baseContext, onBack }) {
   const [err, setErr] = useState("");
   const [started, setStarted] = useState(false);
 
-  // 底部輸入狀態
-  const [mode, setMode] = useState(MODES[0]); // 預設 Do
+  const [mode, setMode] = useState(MODES[0]); // default Do
   const [input, setInput] = useState("");
   const inputRef = useRef(null);
   const bottomRef = useRef(null);
